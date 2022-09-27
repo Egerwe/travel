@@ -1,0 +1,93 @@
+<body>
+<!-- 头部 start -->
+    <header id="header">
+        <div class="shortcut">
+            <!-- 未登录状态  -->
+            <div id="login_out" class="login_out">
+                <a href="login.html">登录</a>
+                <a href="register.html">注册</a>
+            </div>
+            <!-- 登录状态  -->
+            <div id="login" class="login">
+                <span id="loginMsg">欢迎回来，admin</span>
+                <a href="/travel_war/pages/myfavorite.html" class="collection">我的收藏</a>
+                <a href="javascript:void(0);" onclick="loginOut();">退出</a>
+            </div>
+        </div>
+        <div class="header_wrap">
+            <div class="topbar">
+                <div class="logo">
+                    <a href="/travel_war/pages/index.html"><img width="207px" height="56px" src="images/logo.jpg" alt=""></a>
+                </div>
+                <div class="search">
+                    <input name="" id="queryString" type="text" placeholder="请输入路线名称" class="search_input" autocomplete="off">
+                    <a href="javascript:void(0)" onclick="searchRoute();" class="search-button">搜索</a>
+                </div>
+                <div class="hottel">
+                    <div class="hot_pic">
+                        <img src="images/hot_tel.jpg" alt="">
+                    </div>
+                    <div class="hot_tel">
+                        <p class="hot_time">客服热线(9:00-18:00)</p>
+                        <p class="hot_num">0755-8668 6889</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- 头部 end -->
+     <!-- 首页导航 -->
+    <div class="navitem">
+        <ul class="nav" id="nav">
+
+        </ul>
+    </div>
+</body>
+<html>
+<script src="js/getParameter.js"></script>
+<script>
+    $(function () {
+        //激活状态的处理：获取cid，根据cid决定li的样式
+        var cid = getParameter("cid");
+        console.log("---cid---:" +cid);
+        console.log("=====header=======");
+        //通过ajax获取服务器的分类列表
+        //参数：参数1：服务器地址，参数2：回调函数 - 服务器返回结果后调用的函数
+        $.get(APP_PATH+"/category/queryAll.do",function (res) {
+            //对返回的data（category列表进行处理）
+            var catList = res.data;
+            console.log(catList);
+
+            var liStr1 = '<li><a href="/travel_war/pages/index.html">首页</a></li>'
+            $("#nav").append(liStr1);
+            //id 需要传输给下一个页面
+            for(let i = 0; i < catList.length; i++){
+                //构建li的内容
+                if (cid == catList[i].cid){
+                    var liStr = '<li class="nav-active" ><a href="route_list.html?cid=' + catList[i].cid + '"&ts="+new Date().getTime()' + '">' + catList[i].cname + '</a></li>'
+                    //将index的激活状态去掉
+                    $("#indexLi").removeAttr("class");
+                }else {
+                    var liStr = '<li><a href="route_list.html?cid=' + catList[i].cid + '"&ts="+new Date().getTime()' + '">' + catList[i].cname + '</a></li>'
+                }
+                $("#nav").append(liStr);
+            }
+            var liStr2 = '<li><a href="/travel_war/pages/favoriterank.html">收藏排行榜</a></li>'
+            $("#nav").append(liStr2);
+        })
+    })
+
+    //对搜索点击事件进行处理
+    function searchRoute() {
+        var cid = getParameter("cid");
+        var queryString = $("#queryString").val();//获取查询条件
+        if (queryString == null || queryString.length == 0){
+            alert("请输入查询条件");
+            return;
+        }
+        //构建新的url，包含cid和查询条件，并跳转
+        //增加ts参数的目的：解决浏览器缓存问题
+        location.href="route_list.html?cid="+cid+"&queryString="+queryString +"&ts="+new Date().getTime();
+    }
+</script>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../js/jquery.min.js"></script>
+    <script>
+        //熟悉jq的写法：document.ready事件函数 --- 简化的写法
+        $(function () {
+            alert("hello world!");
+            //可以正确执行
+            document.getElementById("div1").innerHTML="你好，佛山！";
+
+            $("#div2").html("你好，广东!");
+        })
+        //报错：原因页面没有加载完，获取div1会失败
+        //document.getElementById("div1").innerHTML="你好，佛山！";
+
+        //完整写法：document.ready事件处理的完整写法
+        $(document).ready(function () {
+            alert("你好，我是完整写法！");
+        })
+
+    </script>
+</head>
+<body>
+<div id="div1">
+
+</div>
+<div id="div2">
+
+</div>
+</body>
+</html>

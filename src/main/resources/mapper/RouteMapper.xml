@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--注意namespace要和Mapper接口的包和接口名一致-->
+<mapper namespace="edu.fk.mapper.RouteMapper">
+<!--	语句的id在这个文件中要唯一，而且要Mapper接口中的方法名相同
+        resultType  -  返回的数据类型
+        动态：使用mybatis的动态语句实现按照name来查询
+        传参方式：parameterType=“map” ，根据map中的key来获取数据进行传参
+-->
+    <!-- 查询线路-->
+    <select id="selectByCidAndName" parameterType="map" resultType="edu.fk.pojo.Route">
+		SELECT cr.cid,r.* FROM tab_category_route cr ,tab_route r
+        where cid=#{cid}
+        and cr.rid=r.rid
+        <if test="rname != null and rname.length>0">
+			and r.rname like concat('%',#{rname},'%')
+		</if>
+        and isDelete = 1
+	</select>
+
+    <select id="selectByCondition" parameterType="string" resultType="edu.fk.pojo.Route">
+        select * from tab_route where 1=1
+        <if test="rname != null and rname.length>0">
+            and rname like concat('%',#{rname},'%')
+        </if>
+        and isDelete = 1
+    </select>
+
+    <!--增加线路-->
+    <insert id="insert" parameterType="edu.fk.pojo.Route">
+        insert into tab_route(rname,price,routeIntroduce,rflag,rdate,count,rimage,sid)
+        values(#{rname},#{price},#{routeIntroduce},#{rflag},#{rdate},#{count},#{rimage},#{sid})
+    </insert>
+
+    <!--删除线路-->
+    <update id="updateToDeleteById" parameterType="int">
+        update tab_route set isDelete = 0 where rid = #{rid}
+    </update>
+
+    <!--修改-->
+    <update id="update" parameterType="edu.fk.pojo.Route">
+        update tab_route
+        <set>
+            <if test="rname != null">rname = #{rname},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="routeIntroduce != null">routeIntroduce = #{routeIntroduce},</if>
+            <if test="rflag != null">rflag = #{rflag},</if>
+            <if test="rdate != null">rdate = #{rdate},</if>
+            <if test="count != null">count = #{count},</if>
+            <if test="rimage != null">rimage = #{rimage},</if>
+            <if test="sid != null">sid = #{sid},</if>
+        </set>
+        where rid = #{rid}
+    </update>
+
+    <!--热门旅游线路+收藏排行榜-->
+    <select id="selectHot" parameterType="int" resultType="edu.fk.pojo.Route">
+        select * from tab_route order by count desc limit 0, #{count}
+    </select>
+
+    <!-- 旅游产品详情与商家关联的map -->
+    <resultMap id="routeAndSeller" type="edu.fk.pojo.Route">
+        <id column="rid" property="rid"/>
+        <result column="rname" property="rname"/>
+        <result column="price" property="price"/>
+        <result column="routeIntroduce" property="routeIntroduce"/>
+        <result column="rflag" property="rflag"/>
+        <result column="rdate" property="rdate"/>
+        <result column="count" property="count"/>
+        <result column="rimage" property="rimage"/>
+        <result column="sid" property="sid"/>
+        <association property="seller" javaType="edu.fk.pojo.Seller">
+        <id column="sid" property="sid"/>
+        <result column="sname" property="sname"/>
+        <result column="consphone" property="consphone"/>
+        <result column="address" property="address"/>
+        </association>
+    </resultMap>
+
+    <select id="selectById" parameterType="int" resultMap="routeAndSeller">
+    select * from tab_route r left join tab_seller s on r.sid = s.sid where r.rid = #{rid}
+    </select>
+
+    <select id="selectByRid" parameterType="int" resultType="edu.fk.pojo.RouteImg">
+    select * from tab_route_img where rid = #{rid}
+    </select>
+
+    <!--收藏和取消收藏-->
+    <update id="updateCountAdd" parameterType="int">
+	update tab_route set count = count + 1 where rid = #{rid}
+    </update>
+
+    <update id="updateCountSub" parameterType="int">
+	update tab_route set count = count - 1 where rid = #{rid}
+    </update>
+</mapper>

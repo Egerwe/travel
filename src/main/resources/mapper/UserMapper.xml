@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.fk.mapper.UserMapper">
+
+    <select id="selectByUsername" parameterType="string" resultType="edu.fk.pojo.User">
+		select * from tab_user where username = #{username}
+	</select>
+
+	<select id="selectById" parameterType="int" resultType="edu.fk.pojo.User">
+		select * from tab_user where uid = #{uid}
+	</select>
+
+    <insert id="insert" parameterType="edu.fk.pojo.User">
+		insert into tab_user(username, password, name, birthday, sex, telephone, email, status, code)
+		values(#{username},#{password},#{name},#{birthday},#{sex},#{telephone},#{email},#{status},#{code})
+	</insert>
+
+<!--	update 用户-->
+	<update id="update" parameterType="edu.fk.pojo.User">
+		update tab_user set username=#{username},password=#{password},name=#{name}, birthday=#{birthday},
+		sex=#{sex}, telephone=#{telephone},email=#{email}, status=#{status}, code=#{code}
+		where uid=#{uid}
+	</update>
+
+<!--	不能写List，是要写中的类型对象-->
+	<select id="findAll" parameterType="map" resultType="edu.fk.pojo.User">
+		select * from tab_user
+		<if test="queryString != null and queryString.length>0">
+			where name like concat('%',#{queryString},'%')
+		</if>
+	</select>
+
+<!--	根据active code查询用户-->
+	<select id="selectByActiveCode" parameterType="string" resultType="edu.fk.pojo.User">
+	    select * from tab_user where code = #{code} and (status="N" or status is null )
+	</select>
+
+<!--	根据用户名和密码查询用户-->
+	<select id="selectByUserNameAndPassword" parameterType="edu.fk.pojo.User" resultType="edu.fk.pojo.User">
+        select * from tab_user where username = #{username} and password = #{password}
+	</select>
+
+	<delete id="delete" parameterType="int">
+		delete from tab_user where uid=#{id}
+	</delete>
+</mapper>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>融云旅游网-登录</title> 
+	<link rel="shortcut icon" href="#"/>
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+	<!--导入jquery-->
+	<script src="js/jquery-3.3.1.js"></script>
+</head>
+
+<body>
+<!--引入头部-->
+<div id="header"></div>
+    <!-- 头部 end -->
+    <section id="login_wrap">
+        <div class="fullscreen-bg" style="background: url(images/login_bg.png);height: 532px;">s
+        </div>
+        <div class="login-box">
+        	<div class="title">
+        		<span>欢迎登录去哪玩账户</span>
+        	</div>
+        	<div class="login_inner">
+				
+				<!--登录错误提示消息-->
+        		<div id="errorMsg" class="alert alert-danger" ></div>
+				<form id="loginForm" action="" method="post" accept-charset="utf-8">
+					<input id="username" name="username" type="text" placeholder="请输入账号" autocomplete="off">
+        			<input id="password" name="password" type="password" placeholder="请输入密码" autocomplete="off">
+        			<div class="verify">
+					<input id="check" name="check" type="text" placeholder="请输入验证码" autocomplete="off">
+					<span><img id="img" src="/travel_war/code/checkCode.do" alt="" onclick="changeCheckCode(this)"></span>
+					<script type="text/javascript">
+
+						//初始化验证码
+						$(function () {
+							img.src=APP_PATH+"/code/checkCode.do?"+new Date().getTime();
+						})
+						//图片点击事件
+						function changeCheckCode(img) {
+							img.src=APP_PATH+"/code/checkCode.do?"+new Date().getTime();
+						}
+					</script>
+			</div>
+			<div class="submit_btn">
+        				<button id="submitBtn" type="button">登录</button>
+        				<div class="auto_login">
+        					<input type="checkbox" name="" class="checkbox">
+        					<span>自动登录</span>
+        				</div>        				
+        			</div>        			       		
+        		</form>
+        		<div class="reg">没有账户？<a href="/travel_war/pages/register.html">立即注册</a></div>
+        	</div>
+        </div>
+    </section>
+    <!--引入尾部-->
+    <div id="footer"></div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <!--导入布局js，共享header和footer-->
+    <script type="text/javascript" src="js/include.js"></script>
+
+    <script>
+		//登录处理
+		//document.ready事件
+		$(function () {
+			//
+			$("#submitBtn").click(function () {
+				//提交处理
+				//客户端验证
+				var username = $("#username").val();
+				var password = $("#password").val();
+				var check = $("#check").val();
+				if(username == null || username.length==0){
+					$("#errorMsg").html("请输入用户名！");
+					return false;
+				}
+				if(password == null || password.length==0){
+					$("#errorMsg").html("请输入密码！");
+					return false;
+				}
+				if(check == null || check.length==0){
+					$("#errorMsg").html("请输入验证码！");
+					return false;
+				}
+				$("#errorMsg").html("");
+
+				//使用ajax的post方法提交数据
+				$.post(APP_PATH+"/user/login.do",$("#loginForm").serialize(),function (res) {
+					if (res.flag){
+						location.href=APP_PATH+"/pages/index.html"
+					}else {
+						//刷新验证码
+						$("#img").attr("src",APP_PATH+"/code/checkCode.do?"+new Date().getTime())
+						$("#errorMsg").html("登录失败：" +res.message);
+					}
+				})
+			})
+		})
+	</script>
+</body>
+	
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../js/jquery.min.js"></script>
+    <script>
+        //事件
+        $(function () {
+            //
+            //document.getElementById("div1").onclick = function()
+            //鼠标进入事件,里面的参数就是事件处理函数，当事件发生时候被触发（被执行）
+            $("#div1").mouseenter(function () {
+                $("#div1").html("鼠标进入了我的房间！");
+            });
+            //鼠标离开事件
+            $("#div1").mouseleave(function () {
+                $("#div1").html("鼠标离开了我的房间！");
+            })
+        })
+    </script>
+    <style>
+        .c1{
+            border: 1px solid red;
+            background-color: pink;
+            height: 100px;
+            width: 180px;
+        }
+    </style>
+
+</head>
+<body>
+<div id="div1" class="c1">
+
+</div>
+
+</body>
+</html>

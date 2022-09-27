@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>注册</title>
+		<link rel="shortcut icon" href="#"/>
+        <link rel="stylesheet" type="text/css" href="css/common.css">
+        <link rel="stylesheet" href="css/register.css">
+		<!--导入jquery-->
+		<script src="js/jquery-3.3.1.js"></script>
+		
+    </head>
+	<body>
+	<!--引入头部-->
+	<div id="header"></div>
+        <!-- 头部 end -->
+    	<div class="rg_layout">
+    		<div class="rg_form clearfix">
+    			<div class="rg_form_left">
+    				<p>新用户注册</p>
+    				<p>USER REGISTER</p>
+    			</div>
+    			<div class="rg_form_center">
+					<div id="errorMsg" style="color:#ff0000; text-align: center;"></div>
+					<!--注册表单-->
+    				<form id="registerForm" action="register">
+						<!--提交处理请求的标识符-->
+						<input type="hidden" name="action" value="register">
+    					<table style="margin-top: 25px;">
+    						<tr>
+    							<td class="td_left">
+    								<label for="username">用户名</label>
+    							</td>
+    							<td class="td_right">
+    								<input type="text" id="username" name="username" placeholder="请输入账号">
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left">
+    								<label for="password">密码</label>
+    							</td>
+    							<td class="td_right">
+    								<input type="password" id="password" name="password" placeholder="请输入密码">
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left">
+    								<label for="email">Email</label>
+    							</td>
+    							<td class="td_right">
+    								<input type="text" id="email" name="email" placeholder="请输入Email">
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left">
+    								<label for="name">姓名</label>
+    							</td>
+    							<td class="td_right">
+    								<input type="text" id="name" name="name" placeholder="请输入真实姓名">
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left">
+    								<label for="telephone">手机号</label>
+    							</td>
+    							<td class="td_right">
+    								<input type="text" id="telephone" name="telephone" placeholder="请输入您的手机号">
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left">
+    								<label for="sex">性别</label>
+    							</td>
+    							<td class="td_right gender">
+    								<input type="radio" id="sex" name="sex" value="0" checked> 男
+    								<input type="radio" name="sex" value="1"> 女
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left">
+    								<label for="birthday">出生日期</label>
+    							</td>
+    							<td class="td_right">
+    								<input type="date" id="birthday" name="birthday" placeholder="年/月/日">
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left">
+    								<label for="check">验证码</label>
+    							</td>
+    							<td class="td_right check">
+    								<input type="text" id="check" name="check" class="check">
+    								<img id="img" src= height="32px" alt="" onclick="changeCheckCode(this)">
+									<script type="text/javascript">
+										$(function () {
+											img.src=APP_PATH+"/code/checkCode.do?"+new Date().getTime();
+										})
+										//图片点击事件
+										function changeCheckCode(img) {
+											img.src=APP_PATH+"/code/checkCode.do?"+new Date().getTime();
+                                        }
+									</script>
+    							</td>
+    						</tr>
+    						<tr>
+    							<td class="td_left"> 
+    							</td>
+    							<td class="td_right check"> 
+    								<input id="submitBtn" type="button" class="submit" value="注册">
+									<span id="msg" style="color: #ff0000;"></span>
+    							</td>
+    						</tr>
+    					</table>
+    				</form>
+    			</div>
+    			<div class="rg_form_right">
+    				<p>
+    					已有账号？
+    					<a href="/travel_war/pages/login.html">立即登录</a>
+    				</p>
+    			</div>
+    		</div>
+    	</div>
+        <!--引入尾部-->
+    	<div id="footer"></div>
+		<!--导入布局js，共享header和footer-->
+    <script>
+		//jquery的写法
+		//jquery的默认事件，在Html页面加载完之后调用
+		//$(func(){}) document.ready()和window.onload
+
+		$(function(){
+			console.log(APP_PATH);
+			// alert(11111);
+			//1、用户名验证
+			$("#username").blur(checkUserName);
+			//2、邮箱的验证
+			$("#email").blur(checkEmail);
+			//3、密码的验证
+			$("#password").blur(checkPassword);
+		})
+
+		//document.ready事件，在页面加载完之后会调用，作用和window.onload事件类似
+		// $(function () {
+		//
+		// })
+
+		//验证用户名是否有效
+		function checkUserName() {
+
+			//获取用户名的值
+			var username = $("#username").val();
+			if (username == null || username == "") {
+				//提示信息,在errorMsg这个div中显示错误信息
+				$("#errorMsg").html("请输入用户名！");
+				return false;
+			}
+			//验证长度是否符合要求
+			if (username.length < 3 || username.length > 8) {
+				$("#errorMsg").html("用户名长度应该是大于等于3且小于等于8位");
+				return false;
+			}
+
+			//对是否重复进行验证
+			//ajax 调用--get方式
+			$.get(APP_PATH+"/user/checkUsername.do?username="+username,
+					//回调函数
+					function (result) {
+				        if (result.flag){
+				        	$("#errorMsg").html("")
+							return true;
+						}else {
+				        	$("#errorMsg").html("用户名已存在，请重新换一个")
+							return false;
+						}
+					}
+			)
+
+			//将错误提示置空
+			$("#errorMsg").html("")
+			return true
+		}
+
+		//检查邮箱是否合法
+		function checkEmail() {
+			//获取邮箱
+			var email = $("#email").val();
+			//邮箱校验的正则表达式
+			var reg_email = /^\w+@\w+\.\w+$/;
+			var flag = reg_email.test(email);
+			if(flag){
+				//通过验证
+				//错误提示置空
+				$("#errorMsg").html("")
+				return true
+			} else{
+				$("#errorMsg").html("请输入正确的邮箱");
+				return false;
+			}
+		}
+
+		//验证密码是否正确
+		function checkPassword(){
+			// 获取密码输入框的内容
+			var password = $("#password").val();
+			if(password == null || password == ""){// 没有输入用户名
+				$("#password").css("border", "1px solid red");
+				$("#errorMsg").html("请输入密码");
+				return false;
+			}
+			if(password.length < 6 || password.length > 10){
+				$("#password").css("border", "1px solid red");
+				$("#errorMsg").html("密码长度为6-10位");
+				return false;
+			}
+			$("#password").css("border", "");
+			$("#errorMsg").html("");
+			return true;
+
+		}
+
+
+		//表单的提交的处理：1、需要验证 2、对处理的结果进行处理：注册成功 -- 跳转到提示页面  注册失败 - 提示错误原因。
+		$(function () {
+			//注册form提交时间处理,等同于js里面的onsubmit事件
+			//$("#registerForm").submit(function(){})
+			//如果提交的按钮的类型是button，则处理点击事件
+			$("#submitBtn").click(function () {
+				//这是按钮为不可用，避免重复点击
+				//$("#submitBtn").attr("disable",true);
+
+				//验证
+				var flag1 = checkUserName();
+				if(!flag1){
+					return false;
+				}
+				var flag2 = checkEmail();
+				if(!flag2){
+					return false;
+				}
+				var flag3 = checkPassword();
+				if(!flag3){
+					return false;
+				}
+				console.log($("#registerForm").serialize());
+				//如果通过检查，则提交表单
+				//通过jquery的post方法提交数据给服务器，进行注册
+				//参数：路径，表单数据，回调函数
+				$.post(APP_PATH+"/user/regist.do",$("#registerForm").serialize(),function (res) {
+					console.log(res);
+					if(res.flag){
+						//注册成功 -- 跳转到提示页面
+						location.href=APP_PATH+"/pages/register_ok.html"
+					}else{
+						//提示错误原因
+						$("#errorMsg").html("注册失败，原因："+res.message);
+					}
+				})
+			})
+		})
+
+	</script>
+	<script type="text/javascript" src="js/include.js"></script>
+	</body>
+</html>

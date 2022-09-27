@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.fk.mapper.CategoryMapper">
+    <select id="queryAll" resultType="edu.fk.pojo.Category">
+		select * from tab_category order by cid
+	</select>
+
+	<select id="selectAll" resultType="edu.fk.pojo.Category">
+        select * from tab_category order by cid
+    </select>
+	<select id="selectByCondition" parameterType="string" resultType="edu.fk.pojo.Category">
+		select * from tab_category where 1=1
+		<if test="cname != null and cname.length>0">
+			and cname like concat('%',#{cname},'%')
+		</if>
+	</select>
+	<delete id="delete" parameterType="int">
+        delete from tab_category where cid=#{id}
+    </delete>
+	<update id="update" parameterType="edu.fk.pojo.Category">
+        update tab_category set cname=#{cname} where cid=#{cid}
+    </update>
+	<insert id="add" parameterType="edu.fk.pojo.Category">
+        insert into tab_category(cname) value (#{cname})
+    </insert>
+</mapper>

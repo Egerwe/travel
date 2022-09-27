@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../js/jquery.min.js"></script>
+    <script>
+        $(function () {
+            //选择器的目的：获取html元素对应的对象，从而可以对元素进行操作
+            //1.基本选择器的id 选择器，使用#id
+            $("#div1").html("亏贼！");//html()没有参数就是获得
+
+            //2.标签选择器
+            $("div").css({"color":"red","heigh":"30px","width":"130px","border":"1px solid blue"});
+
+            //3、类选择器,使用.+class的名来选择
+            $(".c1").html("刚子");
+            $(".c1").css("background-color","pink");
+
+            //----层级选择器
+            //属性选择器
+            $("a[class=c5]").html("找一找！");
+
+            //过滤选择器
+            //li隔行变色
+            $("ul>li:odd").css("color","red");
+
+        })
+    </script>
+    <style>
+        .c2222{
+            background-color: #1E9FFF;
+        }
+    </style>
+</head>
+<body>
+
+<div id="div1">
+</div>
+<div class="c1">111</div>
+<div class="c1">222</div>
+<div class="c2">333
+    <a href="http://www.baidu.com" class="c5">搜一搜11</a><br>
+    <a href="http://www.baidu.com" class="c6">搜一搜22</a><br>
+    <a href="http://www.baidu.com" >搜一搜33</a>
+</div>
+<ul>
+    <li>111</li>
+    <li>123</li>
+    <li>141</li>
+    <li>13532</li>
+    <li>13432</li>
+    <li>15324</li>
+    <li>1543</li>
+    <li>143534</li>
+    <li>11778</li>
+    <li>18888</li>
+</ul>
+</body>
+</html>

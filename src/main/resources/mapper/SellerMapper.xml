@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.fk.mapper.SellerMapper">
+
+	<select id="selectByCondition" parameterType="string" resultType="edu.fk.pojo.Seller">
+		select * from tab_seller where 1=1
+		<if test="sname != null and sname.length>0">
+			and sname like concat('%',#{sname},'%')
+		</if>
+	</select>
+
+	<delete id="delete" parameterType="int">
+        delete from tab_seller where sid=#{id}
+    </delete>
+
+	<update id="update" parameterType="edu.fk.pojo.Seller">
+        update tab_seller set sname= #{sname},consphone= #{consphone},address= #{address} where sid=#{sid}
+    </update>
+
+	<insert id="add" parameterType="edu.fk.pojo.Seller">
+        insert into tab_seller(sname,consphone,address) value (#{sname},#{consphone},#{address})
+    </insert>
+
+</mapper>

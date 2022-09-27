@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.fk.mapper.FavoriteMapper">
+
+    <insert id="insert" parameterType="edu.fk.pojo.Favorite">
+        insert into tab_favorite(rid, date, uid) values(#{rid}, #{date}, #{uid})
+    </insert>
+
+    <delete id="delete" parameterType="edu.fk.pojo.Favorite">
+        delete from tab_favorite where rid = #{rid} and uid = #{uid}
+    </delete>
+
+    <select id="selectByRidAndUid" parameterType="edu.fk.pojo.Favorite" resultType="edu.fk.pojo.Favorite">
+        select * from tab_favorite where rid = #{rid} and uid = #{uid}
+    </select>
+
+    <select id="selectByUserId" parameterType="int" resultType="edu.fk.pojo.Route">
+        select r.* from tab_favorite f left join tab_route r on f.rid = r.rid where uid = #{uid}
+    </select>
+
+    <delete id="deleteByUid" parameterType="int">
+        delete from tab_favorite where uid = #{uid}
+    </delete>
+</mapper>
